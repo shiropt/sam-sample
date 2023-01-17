@@ -8,6 +8,38 @@ Globals:
   Api:
     TracingEnabled: true
 Resources:
+  handlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/app.handler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: "Hello Serverless\u3092\u8FD4\u3059"
+      Policies: null
+      Environment:
+        Variables:
+          SAMPLE_TABLE:
+            Ref: SampleTable
+          NODE_OPTIONS: ' --enable-source-maps'
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+      CodeUri: handlerFunction
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+        - src/handlers/app.ts
+        Minify: true
+        Sourcemap: true
+        Target: es2020
+      SamResourceId: handlerFunction
   getAllItemsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -17,36 +49,8 @@ Resources:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
-      Policies:
-      - DynamoDBCrudPolicy:
-          TableName:
-            Ref: SampleTable
-      Environment:
-        Variables:
-          SAMPLE_TABLE:
-            Ref: SampleTable
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /
-            Method: GET
-      CodeUri: getAllItemsFunction-Shared
-    Metadata:
-      SamResourceId: getAllItemsFunction
-  testFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/test.testHandler
-      Runtime: nodejs18.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
+      Description: "\u5168\u3066\u306E\u30EC\u30B3\u30FC\u30C9\u3092\u8FD4\u3057\u307E\
+        \u3059"
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -60,18 +64,18 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /test
+            Path: /get-all
             Method: GET
-      CodeUri: testFunction
+      CodeUri: getAllItemsFunction
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
         EntryPoints:
-        - src/handlers/test.ts
+        - src/handlers/get-all-items.ts
         Minify: true
         Sourcemap: true
         Target: es2020
-      SamResourceId: testFunction
+      SamResourceId: getAllItemsFunction
   getByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -81,8 +85,8 @@ Resources:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get one item by
-        id from a DynamoDB table.
+      Description: "\u30D1\u30B9\u30D1\u30E9\u30E1\u30FC\u30BF\u306B\u6307\u5B9A\u3057\
+        \u305Fid\u306Eitem\u3092\u8FD4\u3057\u307E\u3059"
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -91,14 +95,22 @@ Resources:
         Variables:
           SAMPLE_TABLE:
             Ref: SampleTable
+          NODE_OPTIONS: ' --enable-source-maps'
       Events:
         Api:
           Type: Api
           Properties:
             Path: /{id}
             Method: GET
-      CodeUri: getAllItemsFunction-Shared
+      CodeUri: getByIdFunction
     Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+        - src/handlers/get-by-id.ts
+        Minify: true
+        Sourcemap: true
+        Target: es2020
       SamResourceId: getByIdFunction
   putItemFunction:
     Type: AWS::Serverless::Function
@@ -109,8 +121,7 @@ Resources:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
+      Description: "item\u3092\u767B\u9332\u3057\u307E\u3059"
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -119,14 +130,22 @@ Resources:
         Variables:
           SAMPLE_TABLE:
             Ref: SampleTable
+          NODE_OPTIONS: ' --enable-source-maps'
       Events:
         Api:
           Type: Api
           Properties:
             Path: /
             Method: POST
-      CodeUri: getAllItemsFunction-Shared
+      CodeUri: putItemFunction
     Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+        - src/handlers/put-item.ts
+        Minify: true
+        Sourcemap: true
+        Target: es2020
       SamResourceId: putItemFunction
   SampleTable:
     Type: AWS::Serverless::SimpleTable
