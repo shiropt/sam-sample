@@ -7,15 +7,14 @@ const ddbDocClient = DynamoDBDocumentClient.from(client);
 
 const TableName = "sam-sample-SampleTable-1T8PIFTWBASE2";
 
-export const putItemHandler = async (event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) => {
+export const putItemHandler = async (event: any, context: Context, callback: APIGatewayProxyCallback) => {
   if (event.httpMethod !== "POST") {
     throw new Error(`postMethod only accepts POST method, you tried: ${event.httpMethod} method.`);
   }
-
-  const body = JSON.parse(event.body!);
+  const body = event.body;
   const id = body.id;
   const name = body.name;
-
+  console.log("イベント", event);
   var params = {
     TableName,
     Item: { id, name },
@@ -24,16 +23,16 @@ export const putItemHandler = async (event: APIGatewayEvent, context: Context, c
   try {
     const data = await ddbDocClient.send(new PutCommand(params));
     console.log("Success - item added or updated", data);
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(data),
+    };
+    return response;
   } catch (err) {
     console.log("Error", err);
   }
 
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify(body),
-  };
-
   // All log statements are written to CloudWatch
-  console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
-  return response;
+  // console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
+  // return response;
 };

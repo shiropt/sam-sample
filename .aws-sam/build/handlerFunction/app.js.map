@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../../../../private/var/folders/1x/ybyyh3014vs3w2451j71wqlh0000gn/T/tmppmtmg0mf/src/handlers/app.ts"],
-  "sourcesContent": ["import { Context, APIGatewayProxyCallback, APIGatewayEvent } from \"aws-lambda\";\n\nexport const handler = async (event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback) => {\n  if (event.httpMethod !== \"GET\") {\n    throw new Error(`getAllItems only accept GET method, you tried: ${event.httpMethod}`);\n  }\n\n  try {\n    const response = {\n      statusCode: 200,\n      body: \"Hello Serverless\",\n    };\n    console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);\n    return response;\n  } catch (err) {\n    console.log(\"Error\", err);\n  }\n};\n"],
-  "mappings": "yaAAA,IAAAA,EAAA,GAAAC,EAAAD,EAAA,aAAAE,IAAA,eAAAC,EAAAH,GAEO,IAAME,EAAU,MAAOE,EAAwBC,EAAkBC,IAAsC,CAC5G,GAAIF,EAAM,aAAe,MACvB,MAAM,IAAI,MAAM,kDAAkDA,EAAM,YAAY,EAGtF,GAAI,CACF,IAAMG,EAAW,CACf,WAAY,IACZ,KAAM,kBACR,EACA,eAAQ,KAAK,kBAAkBH,EAAM,oBAAoBG,EAAS,oBAAoBA,EAAS,MAAM,EAC9FA,CACT,OAASC,EAAP,CACA,QAAQ,IAAI,QAASA,CAAG,CAC1B,CACF",
-  "names": ["app_exports", "__export", "handler", "__toCommonJS", "event", "context", "callback", "response", "err"]
-}
